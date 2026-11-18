@@ -7,6 +7,8 @@
 - Sessions for activities a student can no longer see (unenrolled, hidden or deleted) are no longer shown in Today, This week or the calendar feed.
 - Privacy API declares every stored field; PHPUnit tests for privacy, the calendar token, web services and visibility.
 - Built JavaScript is now included in the package.
+- Plans made in the middle of the week no longer put sessions on days or hours that are already over; rescheduling a missed session uses the same rule.
+- This week shows the Personal tasks button, like Today.
 
 ## 0.1.0
 

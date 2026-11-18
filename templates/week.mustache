@@ -34,6 +34,7 @@
     * todayurl {string} URL to the Today page.
     * weekurl {string} URL to this page.
     * preferencesurl {string} URL to the preferences page.
+    * personaltasksurl {string} URL to the personal tasks page.
 
     Example context (json):
     {
@@ -71,7 +72,8 @@
         "totalrequiredminutes": 720,
         "todayurl": "https://example.com/local/studyplanner/today.php",
         "weekurl": "https://example.com/local/studyplanner/week.php",
-        "preferencesurl": "https://example.com/local/studyplanner/preferences.php"
+        "preferencesurl": "https://example.com/local/studyplanner/preferences.php",
+        "personaltasksurl": "https://example.com/local/studyplanner/personaltasks.php"
     }
 }}
 <div class="local-studyplanner-week" data-region="studyplanner-week">
@@ -79,6 +81,7 @@
         <a href="{{todayurl}}" class="btn btn-outline-secondary btn-sm">{{#str}} today, local_studyplanner {{/str}}</a>
         <a href="{{weekurl}}" class="btn btn-primary btn-sm">{{#str}} thisweek, local_studyplanner {{/str}}</a>
         <a href="{{preferencesurl}}" class="btn btn-outline-secondary btn-sm">{{#str}} preferences, local_studyplanner {{/str}}</a>
+        <a href="{{personaltasksurl}}" class="btn btn-outline-secondary btn-sm">{{#str}} personaltasks, local_studyplanner {{/str}}</a>
     </nav>
 
     <h2>{{weeklabel}}</h2>
