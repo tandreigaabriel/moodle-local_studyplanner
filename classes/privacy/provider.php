@@ -167,7 +167,7 @@ class provider implements
         global $DB;
 
         foreach ($contextlist->get_contexts() as $context) {
-            if (!$context instanceof context_user) {
+            if (!$context instanceof context_user || (int) $context->instanceid !== (int) $contextlist->get_user()->id) {
                 continue;
             }
 
@@ -237,7 +237,7 @@ class provider implements
      */
     public static function delete_data_for_user(approved_contextlist $contextlist): void {
         foreach ($contextlist->get_contexts() as $context) {
-            if ($context instanceof context_user) {
+            if ($context instanceof context_user && (int) $context->instanceid === (int) $contextlist->get_user()->id) {
                 self::delete_user_data((int) $context->instanceid);
             }
         }
@@ -257,7 +257,9 @@ class provider implements
         }
 
         foreach ($userlist->get_userids() as $userid) {
-            self::delete_user_data((int) $userid);
+            if ((int) $userid === (int) $context->instanceid) {
+                self::delete_user_data((int) $userid);
+            }
         }
     }
 

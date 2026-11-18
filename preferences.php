@@ -23,7 +23,6 @@
  */
 
 use local_studyplanner\form\preferences_form;
-use local_studyplanner\local\ical_token;
 use local_studyplanner\local\plugin_guard;
 use local_studyplanner\local\preferences_manager;
 use local_studyplanner\task\build_user_plan;
@@ -68,10 +67,7 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('preferences', 'local_studyplanner'));
 $form->display();
 
-$feedurl = new moodle_url('/local/studyplanner/calendar.php', [
-    'userid' => $USER->id,
-    'token' => ical_token::get($USER),
-]);
+$feedurl = new moodle_url('/local/studyplanner/calendar.php');
 
 echo $OUTPUT->heading(get_string('calendarfeed', 'local_studyplanner'), 3);
 echo html_writer::tag('p', get_string('calendarfeedintro', 'local_studyplanner'));

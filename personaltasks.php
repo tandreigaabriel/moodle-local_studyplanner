@@ -43,8 +43,19 @@ $PAGE->set_heading(get_string('pluginname', 'local_studyplanner'));
 $PAGE->set_pagelayout('standard');
 
 if ($action === 'delete' && $id > 0) {
+    $task = $DB->get_record('local_studyplanner_personal_tasks', ['id' => $id, 'userid' => $USER->id], '*', MUST_EXIST);
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        echo $OUTPUT->header();
+        $confirmurl = new moodle_url('/local/studyplanner/personaltasks.php', ['action' => 'delete', 'id' => $id]);
+        echo $OUTPUT->confirm(
+            get_string('confirmdelete', 'local_studyplanner', format_string($task->title)),
+            new single_button($confirmurl, get_string('delete'), 'post'),
+            new moodle_url('/local/studyplanner/personaltasks.php')
+        );
+        echo $OUTPUT->footer();
+        exit;
+    }
     require_sesskey();
-    $DB->get_record('local_studyplanner_personal_tasks', ['id' => $id, 'userid' => $USER->id], '*', MUST_EXIST);
     $DB->delete_records('local_studyplanner_personal_tasks', ['id' => $id, 'userid' => $USER->id]);
     redirect(
         new moodle_url('/local/studyplanner/personaltasks.php'),
@@ -56,7 +67,7 @@ if ($action === 'delete' && $id > 0) {
 
 if ($action === 'add' || $action === 'edit') {
     $existing = null;
-    if ($action === 'edit' && $id > 0) {
+    if ($action === 'edit') {
         $existing = $DB->get_record('local_studyplanner_personal_tasks', ['id' => $id, 'userid' => $USER->id], '*', MUST_EXIST);
     }
 
@@ -81,8 +92,8 @@ if ($action === 'add' || $action === 'edit') {
             'timemodified' => $now,
         ];
 
-        if (!empty($data->id)) {
-            $record->id = $data->id;
+        if ($action === 'edit' && $existing) {
+            $record->id = $existing->id;
             $DB->update_record('local_studyplanner_personal_tasks', $record);
         } else {
             $record->timecreated = $now;
@@ -151,7 +162,7 @@ if ($tasks) {
         $editurl = new moodle_url('/local/studyplanner/personaltasks.php', ['action' => 'edit', 'id' => $task->id]);
         $deleteurl = new moodle_url(
             '/local/studyplanner/personaltasks.php',
-            ['action' => 'delete', 'id' => $task->id, 'sesskey' => sesskey()]
+            ['action' => 'delete', 'id' => $task->id]
         );
 
         $table->data[] = [
