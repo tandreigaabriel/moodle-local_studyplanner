@@ -49,6 +49,7 @@ $items = $DB->get_records_select(
     ['userid' => $userid, 'cancelled' => 'cancelled', 'since' => time() - (30 * DAYSECS)],
     'plannedstart ASC'
 );
+$items = \local_studyplanner\local\item_visibility::filter($items, (int) $userid);
 
 $hostaddress = preg_replace('#^https?://#', '', $CFG->wwwroot);
 

@@ -63,6 +63,7 @@ class today_page implements \renderable, \templatable {
             ['userid' => $this->userid, 'start' => $daystart, 'end' => $dayend, 'cancelled' => 'cancelled'],
             'plannedstart ASC'
         );
+        $items = \local_studyplanner\local\item_visibility::filter($items, (int) $this->userid);
 
         $summary = weekly_summary::for_user($this->userid, $now);
         $exporteditems = array_map([plan_item_exporter::class, 'export'], array_values($items));
