@@ -71,6 +71,9 @@ class provider implements
      */
     public static function get_metadata(collection $collection): collection {
         $collection->add_database_table('local_studyplanner_preferences', [
+            'userid' => 'privacy:metadata:userid',
+            'timecreated' => 'privacy:metadata:timecreated',
+            'timemodified' => 'privacy:metadata:timemodified',
             'maxsessionminutes' => 'privacy:metadata:local_studyplanner_preferences:maxsessionminutes',
             'breakminutes' => 'privacy:metadata:local_studyplanner_preferences:breakminutes',
             'intensity' => 'privacy:metadata:local_studyplanner_preferences:intensity',
@@ -79,18 +82,30 @@ class provider implements
         ], 'privacy:metadata:local_studyplanner_preferences');
 
         $collection->add_database_table('local_studyplanner_availability', [
+            'userid' => 'privacy:metadata:userid',
+            'timecreated' => 'privacy:metadata:timecreated',
+            'timemodified' => 'privacy:metadata:timemodified',
             'dayofweek' => 'privacy:metadata:local_studyplanner_availability:dayofweek',
             'availableminutes' => 'privacy:metadata:local_studyplanner_availability:availableminutes',
             'preferredstarttime' => 'privacy:metadata:local_studyplanner_availability:preferredstarttime',
         ], 'privacy:metadata:local_studyplanner_availability');
 
         $collection->add_database_table('local_studyplanner_plans', [
+            'userid' => 'privacy:metadata:userid',
+            'timecreated' => 'privacy:metadata:timecreated',
+            'timemodified' => 'privacy:metadata:timemodified',
             'periodstart' => 'privacy:metadata:local_studyplanner_plans:periodstart',
             'periodend' => 'privacy:metadata:local_studyplanner_plans:periodend',
             'status' => 'privacy:metadata:local_studyplanner_plans:status',
         ], 'privacy:metadata:local_studyplanner_plans');
 
         $collection->add_database_table('local_studyplanner_plan_items', [
+            'userid' => 'privacy:metadata:userid',
+            'courseid' => 'privacy:metadata:courseid',
+            'cmid' => 'privacy:metadata:cmid',
+            'priority' => 'privacy:metadata:priority',
+            'timecreated' => 'privacy:metadata:timecreated',
+            'timemodified' => 'privacy:metadata:timemodified',
             'title' => 'privacy:metadata:local_studyplanner_plan_items:title',
             'plannedstart' => 'privacy:metadata:local_studyplanner_plan_items:plannedstart',
             'plannedend' => 'privacy:metadata:local_studyplanner_plan_items:plannedend',
@@ -101,6 +116,10 @@ class provider implements
         ], 'privacy:metadata:local_studyplanner_plan_items');
 
         $collection->add_database_table('local_studyplanner_personal_tasks', [
+            'userid' => 'privacy:metadata:userid',
+            'priority' => 'privacy:metadata:priority',
+            'timecreated' => 'privacy:metadata:timecreated',
+            'timemodified' => 'privacy:metadata:timemodified',
             'title' => 'privacy:metadata:local_studyplanner_personal_tasks:title',
             'description' => 'privacy:metadata:local_studyplanner_personal_tasks:description',
             'duedate' => 'privacy:metadata:local_studyplanner_personal_tasks:duedate',
@@ -109,6 +128,8 @@ class provider implements
         ], 'privacy:metadata:local_studyplanner_personal_tasks');
 
         $collection->add_database_table('local_studyplanner_reschedule_log', [
+            'userid' => 'privacy:metadata:userid',
+            'timecreated' => 'privacy:metadata:timecreated',
             'oldstart' => 'privacy:metadata:local_studyplanner_reschedule_log:oldstart',
             'oldend' => 'privacy:metadata:local_studyplanner_reschedule_log:oldend',
             'newstart' => 'privacy:metadata:local_studyplanner_reschedule_log:newstart',
@@ -117,6 +138,9 @@ class provider implements
         ], 'privacy:metadata:local_studyplanner_reschedule_log');
 
         $collection->add_database_table('local_studyplanner_reminders', [
+            'userid' => 'privacy:metadata:userid',
+            'timecreated' => 'privacy:metadata:timecreated',
+            'timemodified' => 'privacy:metadata:timemodified',
             'remindertype' => 'privacy:metadata:local_studyplanner_reminders:remindertype',
             'lastsentat' => 'privacy:metadata:local_studyplanner_reminders:lastsentat',
         ], 'privacy:metadata:local_studyplanner_reminders');
