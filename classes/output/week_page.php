@@ -88,6 +88,7 @@ class week_page implements \renderable, \templatable {
             'todayurl' => (new \moodle_url('/local/studyplanner/today.php'))->out(false),
             'weekurl' => (new \moodle_url('/local/studyplanner/week.php'))->out(false),
             'preferencesurl' => (new \moodle_url('/local/studyplanner/preferences.php'))->out(false),
+            'personaltasksurl' => (new \moodle_url('/local/studyplanner/personaltasks.php'))->out(false),
         ];
     }
 

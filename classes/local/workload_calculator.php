@@ -87,9 +87,17 @@ class workload_calculator {
      * @param int $userid The user id.
      * @param int $weekstart Monday 00:00 timestamp for the target week.
      * @param array $consumedminutesbyday Minutes already committed, keyed by day-start timestamp (shape: array<int, int>).
+     * @param int|null $now Current time; days that are over get no capacity and today's window starts no earlier
+     *     than now (rounded up to 5 minutes). Defaults to time().
      * @return array<int, array{minutes: int, start: int}> Remaining capacity, keyed by day-start timestamp.
      */
-    public static function build_capacity_map(int $userid, int $weekstart, array $consumedminutesbyday = []): array {
+    public static function build_capacity_map(
+        int $userid,
+        int $weekstart,
+        array $consumedminutesbyday = [],
+        ?int $now = null
+    ): array {
+        $now = $now ?? time();
         $weekdaymap = self::get_weekday_availability($userid);
         $cursor = self::get_day_start_datetime($weekstart);
         $capacity = [];
@@ -101,11 +109,19 @@ class workload_calculator {
             $dow = (int) $daydt->format('w'); // 0 = Sunday .. 6 = Saturday.
 
             $minutes = $weekdaymap[$dow]['minutes'] ?? 0;
+            $start = $weekdaymap[$dow]['start'] ?? (18 * 60);
             $consumed = $consumedminutesbyday[$daymidnight] ?? 0;
+
+            // The available window is [start, start + minutes]; drop the part that is already over.
+            $nowminute = (int) ceil(($now - $daymidnight) / MINSECS / 5) * 5;
+            if ($nowminute > $start) {
+                $minutes = max(0, $minutes - ($nowminute - $start));
+                $start = min($nowminute, 24 * 60);
+            }
 
             $capacity[$daymidnight] = [
                 'minutes' => max(0, $minutes - $consumed),
-                'start' => $weekdaymap[$dow]['start'] ?? (18 * 60),
+                'start' => $start,
             ];
         }
 
