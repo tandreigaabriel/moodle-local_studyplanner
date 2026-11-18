@@ -94,8 +94,8 @@ class week_page implements \renderable, \templatable {
      * Builds the per-day heatmap rows for the week.
      *
      * @param int $weekstart Monday 00:00 timestamp for the target week.
-     * @param array<int, array{minutes: int, start: int}> $weekdaymap Availability template, keyed 0..6.
-     * @param array<int, \stdClass[]> $itemsbyday Plan items, keyed by day-start timestamp.
+     * @param array $weekdaymap Availability template, keyed 0..6 (shape: array<int, array{minutes: int, start: int}>).
+     * @param array $itemsbyday Plan items, keyed by day-start timestamp (shape: array<int, \stdClass[]>).
      * @return array
      */
     private function export_days(int $weekstart, array $weekdaymap, array $itemsbyday): array {

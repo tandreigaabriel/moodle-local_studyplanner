@@ -41,7 +41,8 @@ class scheduling_service {
      *
      * @param \stdClass[] $tasks Unified task drafts: title, courseid, cmid, personaltaskid,
      *                           duedate, estimatedminutes, priority, source.
-     * @param array<int, array{minutes: int, start: int}> $capacitymap Remaining capacity, keyed by day-start timestamp.
+     * @param array $capacitymap Remaining capacity, keyed by day-start timestamp
+     *                          (shape: array<int, array{minutes: int, start: int}>).
      * @param int $maxsessionminutes Longest allowed single study session.
      * @param int $breakminutes Break inserted between consecutive sessions on the same day.
      * @return \stdClass[] Plan item drafts, ready to be persisted.
@@ -72,7 +73,7 @@ class scheduling_service {
      *
      * @param \stdClass $task The task to place.
      * @param int[] $dayindex Ordered list of day-start timestamps.
-     * @param array<int, array{remaining: int, cursor: int}> $daystate Mutable per-day capacity state.
+     * @param array $daystate Mutable per-day capacity state (shape: array<int, array{remaining: int, cursor: int}>).
      * @param int $maxsessionminutes Longest allowed single study session.
      * @param int $breakminutes Break inserted between consecutive sessions on the same day.
      * @return \stdClass[] Segments: plannedstart, plannedend, estimatedminutes.
@@ -129,7 +130,7 @@ class scheduling_service {
     /**
      * Consumes as much of a task's remaining minutes as one day's state allows.
      *
-     * @param array{remaining: int, cursor: int} $state The day's mutable capacity state.
+     * @param array $state The day's mutable capacity state (shape: array{remaining: int, cursor: int}).
      * @param int $remainingminutes Minutes of the task still needing a slot.
      * @param int $maxsessionminutes Longest allowed single study session.
      * @param int $breakminutes Break inserted after each session.
@@ -169,7 +170,8 @@ class scheduling_service {
     /**
      * Converts a capacity map into mutable per-day scheduling state.
      *
-     * @param array<int, array{minutes: int, start: int}> $capacitymap Remaining capacity, keyed by day-start timestamp.
+     * @param array $capacitymap Remaining capacity, keyed by day-start timestamp
+     *                          (shape: array<int, array{minutes: int, start: int}>).
      * @return array<int, array{remaining: int, cursor: int}> Mutable state, keyed by day-start timestamp.
      */
     private static function build_day_state(array $capacitymap): array {

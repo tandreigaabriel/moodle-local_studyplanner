@@ -86,7 +86,7 @@ class workload_calculator {
      *
      * @param int $userid The user id.
      * @param int $weekstart Monday 00:00 timestamp for the target week.
-     * @param array<int, int> $consumedminutesbyday Minutes already committed, keyed by day-start timestamp.
+     * @param array $consumedminutesbyday Minutes already committed, keyed by day-start timestamp (shape: array<int, int>).
      * @return array<int, array{minutes: int, start: int}> Remaining capacity, keyed by day-start timestamp.
      */
     public static function build_capacity_map(int $userid, int $weekstart, array $consumedminutesbyday = []): array {
