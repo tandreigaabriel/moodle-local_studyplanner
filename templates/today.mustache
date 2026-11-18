@@ -1,0 +1,123 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+    @package    local_studyplanner
+    @copyright  2026 Andrei Toma
+    @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+{{!
+    @template local_studyplanner/today
+
+    Today's study plan view: a list of the current day's plan items plus an
+    optional workload overload banner.
+
+    Context variables:
+    * today {string} Formatted date label for today.
+    * hasitems {bool} Whether there is at least one item today.
+    * items {array} List of plan item rows.
+    * overloaded {bool} Whether this week's plan exceeds available time.
+    * deficithours {float} Hours by which the week is over capacity.
+    * todayurl {string} URL to this page.
+    * weekurl {string} URL to the This Week page.
+    * preferencesurl {string} URL to the preferences page.
+    * personaltasksurl {string} URL to the personal tasks page.
+
+    Example context (json):
+    {
+        "today": "Tuesday, 21 July 2026",
+        "hasitems": true,
+        "items": [
+            {
+                "id": 12,
+                "title": "Complete Week 4 quiz",
+                "starttime": "18:00",
+                "endtime": "18:30",
+                "estimatedminutes": 30,
+                "status": "planned",
+                "statuslabel": "Planned",
+                "ismissed": false,
+                "iscompleted": false,
+                "isactionable": true,
+                "ispersonal": false,
+                "hasactivityurl": true,
+                "activityurl": "https://example.com/mod/quiz/view.php?id=12"
+            }
+        ],
+        "overloaded": true,
+        "deficithours": 3.5,
+        "todayurl": "https://example.com/local/studyplanner/today.php",
+        "weekurl": "https://example.com/local/studyplanner/week.php",
+        "preferencesurl": "https://example.com/local/studyplanner/preferences.php",
+        "personaltasksurl": "https://example.com/local/studyplanner/personaltasks.php"
+    }
+}}
+<div class="local-studyplanner-today" data-region="studyplanner-today">
+    <nav class="local-studyplanner-nav mb-3">
+        <a href="{{todayurl}}" class="btn btn-primary btn-sm">{{#str}} today, local_studyplanner {{/str}}</a>
+        <a href="{{weekurl}}" class="btn btn-outline-secondary btn-sm">{{#str}} thisweek, local_studyplanner {{/str}}</a>
+        <a href="{{preferencesurl}}" class="btn btn-outline-secondary btn-sm">{{#str}} preferences, local_studyplanner {{/str}}</a>
+        <a href="{{personaltasksurl}}" class="btn btn-outline-secondary btn-sm">{{#str}} personaltasks, local_studyplanner {{/str}}</a>
+    </nav>
+
+    <h2>{{today}}</h2>
+
+    {{#overloaded}}
+    <div class="alert alert-warning local-studyplanner-overload" role="alert">
+        {{#str}} overloadwarning, local_studyplanner, {{deficithours}} {{/str}}
+    </div>
+    {{/overloaded}}
+
+    {{#hasitems}}
+    <ul class="list-group local-studyplanner-itemlist">
+        {{#items}}
+        <li class="list-group-item local-studyplanner-item local-studyplanner-status-{{status}}" data-itemid="{{id}}">
+            <div class="local-studyplanner-item-time">{{starttime}} - {{endtime}}</div>
+            <div class="local-studyplanner-item-title">
+                {{#hasactivityurl}}<a href="{{activityurl}}">{{title}}</a>{{/hasactivityurl}}
+                {{^hasactivityurl}}{{title}}{{/hasactivityurl}}
+            </div>
+            <div class="local-studyplanner-item-meta">
+                <span class="badge badge-secondary">{{estimatedminutes}} {{#str}} minutes, local_studyplanner {{/str}}</span>
+                <span class="badge badge-info">{{statuslabel}}</span>
+            </div>
+            {{#isactionable}}
+            <div class="local-studyplanner-item-actions">
+                <button type="button" class="btn btn-sm btn-success" data-action="complete" data-itemid="{{id}}">
+                    {{#str}} markcomplete, local_studyplanner {{/str}}
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-action="skip" data-itemid="{{id}}">
+                    {{#str}} skip, local_studyplanner {{/str}}
+                </button>
+                {{#ismissed}}
+                <button type="button" class="btn btn-sm btn-outline-primary" data-action="reschedule" data-itemid="{{id}}">
+                    {{#str}} reschedule, local_studyplanner {{/str}}
+                </button>
+                {{/ismissed}}
+            </div>
+            {{/isactionable}}
+        </li>
+        {{/items}}
+    </ul>
+    {{/hasitems}}
+    {{^hasitems}}
+    <p class="local-studyplanner-empty">{{#str}} nothingplannedtoday, local_studyplanner {{/str}}</p>
+    {{/hasitems}}
+</div>
+{{#js}}
+require(['local_studyplanner/plan_actions'], function(PlanActions) {
+    PlanActions.init();
+});
+{{/js}}

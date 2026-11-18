@@ -1,0 +1,120 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+    @package    local_studyplanner
+    @copyright  2026 Andrei Toma
+    @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+{{!
+    @template local_studyplanner/week
+
+    This week's study plan view: each day shown with a workload heatmap bar
+    and that day's plan items.
+
+    Context variables:
+    * weeklabel {string} Formatted date range label for the week.
+    * days {array} Seven day rows: label, plannedminutes, availableminutes, percentage, overloaded, hasitems, items.
+    * overloaded {bool} Whether the week overall exceeds available time.
+    * deficithours {float} Hours by which the week is over capacity.
+    * totalavailableminutes {int} Total available minutes this week.
+    * totalrequiredminutes {int} Total planned minutes this week.
+    * todayurl {string} URL to the Today page.
+    * weekurl {string} URL to this page.
+    * preferencesurl {string} URL to the preferences page.
+
+    Example context (json):
+    {
+        "weeklabel": "20 Jul 2026 - 26 Jul 2026",
+        "days": [
+            {
+                "label": "Monday, 20 July 2026",
+                "plannedminutes": 90,
+                "availableminutes": 120,
+                "percentage": 75,
+                "overloaded": false,
+                "hasitems": true,
+                "items": [
+                    {
+                        "id": 1,
+                        "title": "Work on Assignment 2",
+                        "starttime": "18:00",
+                        "endtime": "19:00",
+                        "estimatedminutes": 60,
+                        "status": "planned",
+                        "statuslabel": "Planned",
+                        "ismissed": false,
+                        "iscompleted": false,
+                        "isactionable": true,
+                        "ispersonal": false,
+                        "hasactivityurl": true,
+                        "activityurl": "https://example.com/mod/assign/view.php?id=1"
+                    }
+                ]
+            }
+        ],
+        "overloaded": true,
+        "deficithours": 2.0,
+        "totalavailableminutes": 600,
+        "totalrequiredminutes": 720,
+        "todayurl": "https://example.com/local/studyplanner/today.php",
+        "weekurl": "https://example.com/local/studyplanner/week.php",
+        "preferencesurl": "https://example.com/local/studyplanner/preferences.php"
+    }
+}}
+<div class="local-studyplanner-week" data-region="studyplanner-week">
+    <nav class="local-studyplanner-nav mb-3">
+        <a href="{{todayurl}}" class="btn btn-outline-secondary btn-sm">{{#str}} today, local_studyplanner {{/str}}</a>
+        <a href="{{weekurl}}" class="btn btn-primary btn-sm">{{#str}} thisweek, local_studyplanner {{/str}}</a>
+        <a href="{{preferencesurl}}" class="btn btn-outline-secondary btn-sm">{{#str}} preferences, local_studyplanner {{/str}}</a>
+    </nav>
+
+    <h2>{{weeklabel}}</h2>
+
+    {{#overloaded}}
+    <div class="alert alert-warning local-studyplanner-overload" role="alert">
+        {{#str}} overloadwarningdetail, local_studyplanner {{/str}}
+    </div>
+    {{/overloaded}}
+
+    {{#days}}
+    <div class="local-studyplanner-day{{#overloaded}} local-studyplanner-day-overloaded{{/overloaded}}">
+        <h3>{{label}}</h3>
+        <div class="local-studyplanner-heatmap">
+            <div class="local-studyplanner-heatmap-bar" style="width: {{percentage}}%"></div>
+        </div>
+        <p class="local-studyplanner-day-meta">
+            {{plannedminutes}} / {{availableminutes}} {{#str}} minutesplanned, local_studyplanner {{/str}}
+        </p>
+        {{#hasitems}}
+        <ul class="list-group local-studyplanner-itemlist">
+            {{#items}}
+            <li class="list-group-item local-studyplanner-item local-studyplanner-status-{{status}}" data-itemid="{{id}}">
+                <div class="local-studyplanner-item-time">{{starttime}} - {{endtime}}</div>
+                <div class="local-studyplanner-item-title">
+                    {{#hasactivityurl}}<a href="{{activityurl}}">{{title}}</a>{{/hasactivityurl}}
+                    {{^hasactivityurl}}{{title}}{{/hasactivityurl}}
+                </div>
+                <span class="badge badge-info">{{statuslabel}}</span>
+            </li>
+            {{/items}}
+        </ul>
+        {{/hasitems}}
+        {{^hasitems}}
+        <p class="local-studyplanner-empty">{{#str}} nothingplannedday, local_studyplanner {{/str}}</p>
+        {{/hasitems}}
+    </div>
+    {{/days}}
+</div>

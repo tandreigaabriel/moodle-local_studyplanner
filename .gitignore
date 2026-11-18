@@ -1,0 +1,10 @@
+CLAUDE.MD
+
+.idea/
+*.log
+node_modules/
+.grunt/
+amd/build/*.min.js
+amd/build/*.min.js.map
+.DS_Store
+Thumbs.db

@@ -1,0 +1,101 @@
+/**
+ * This file is part of Moodle - https://moodle.org/
+ *
+ * Moodle is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Moodle is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Styles for local_studyplanner.
+ *
+ * @package    local_studyplanner
+ * @copyright  2026 Andrei Toma
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+.local-studyplanner-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.local-studyplanner-itemlist .local-studyplanner-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.local-studyplanner-item-time {
+    font-weight: 600;
+    min-width: 7.5rem;
+}
+
+.local-studyplanner-item-title {
+    flex: 1 1 auto;
+}
+
+.local-studyplanner-item-actions {
+    display: flex;
+    gap: 0.35rem;
+}
+
+.local-studyplanner-status-completed .local-studyplanner-item-title {
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+.local-studyplanner-status-missed {
+    border-left: 3px solid #d9534f;
+}
+
+.local-studyplanner-status-rescheduled {
+    border-left: 3px solid #f0ad4e;
+}
+
+.local-studyplanner-overload {
+    font-weight: 600;
+}
+
+.local-studyplanner-day {
+    margin-bottom: 1.5rem;
+}
+
+.local-studyplanner-day-overloaded h3 {
+    color: #d9534f;
+}
+
+.local-studyplanner-heatmap {
+    background-color: #e9ecef;
+    border-radius: 0.25rem;
+    height: 0.75rem;
+    overflow: hidden;
+    width: 100%;
+}
+
+.local-studyplanner-heatmap-bar {
+    background-color: #5cb85c;
+    height: 100%;
+}
+
+.local-studyplanner-day-overloaded .local-studyplanner-heatmap-bar {
+    background-color: #d9534f;
+}
+
+.local-studyplanner-day-meta {
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+.local-studyplanner-empty {
+    color: #6c757d;
+    font-style: italic;
+}
