@@ -30,12 +30,15 @@ namespace local_studyplanner\local;
  * user's password changes, the same approach core's own calendar export uses.
  */
 class ical_token {
+    /** User preference holding the per-user secret mixed into the token. */
+    public const PREFERENCE = 'local_studyplanner_icalsecret';
+
     /**
      * Returns the calendar feed token for a user.
      *
-     * The password is looked up fresh from the database rather than read off the
-     * passed-in user object, because the session $USER has its password field
-     * stripped out for security.
+     * Same idea as core calendar export tokens (user id + password hash + site identifier),
+     * plus a per-user random secret so the student can revoke a leaked link without
+     * changing their password. Changing the password also invalidates the link.
      *
      * @param \stdClass $user The user record. Must include id.
      * @return string The token.
@@ -44,7 +47,38 @@ class ical_token {
         global $CFG, $DB;
 
         $password = $DB->get_field('user', 'password', ['id' => $user->id]);
+        $secret = get_user_preferences(self::PREFERENCE, null, $user->id);
+        if ($secret === null || $secret === '') {
+            $secret = self::reset((int) $user->id);
+        }
 
-        return sha1($user->id . $password . $CFG->siteidentifier . 'local_studyplanner');
+        return sha1($user->id . $password . $CFG->siteidentifier . 'local_studyplanner' . $secret);
+    }
+
+    /**
+     * Checks a token in constant time.
+     *
+     * @param \stdClass $user The user record. Must include id.
+     * @param string $token The token from the request.
+     * @return bool True when the token is valid.
+     */
+    public static function verify(\stdClass $user, string $token): bool {
+        $secret = get_user_preferences(self::PREFERENCE, null, $user->id);
+        if ($secret === null || $secret === '') {
+            return false;
+        }
+        return hash_equals(self::get($user), $token);
+    }
+
+    /**
+     * Replaces the per-user secret, which invalidates every previously issued feed link.
+     *
+     * @param int $userid The user id.
+     * @return string The new secret.
+     */
+    public static function reset(int $userid): string {
+        $secret = random_string(32);
+        set_user_preference(self::PREFERENCE, $secret, $userid);
+        return $secret;
     }
 }

@@ -15,19 +15,29 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Authenticated iCalendar download of the current student's study plan.
+ * iCalendar subscription feed of a student's study plan (token in the URL, revocable).
  *
  * @package    local_studyplanner
  * @copyright  2026 Andrei Toma
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+define('NO_MOODLE_COOKIES', true);
+
+use local_studyplanner\local\ical_token;
+
 require(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/bennu/bennu.inc.php');
 
-require_login();
-require_capability('local/studyplanner:manageownplan', context_system::instance());
-$userid = (int) $USER->id;
+$userid = required_param('userid', PARAM_INT);
+$token = required_param('token', PARAM_ALPHANUM);
+
+$user = \core_user::get_user($userid);
+$valid = $user && !$user->deleted && !$user->suspended && ical_token::verify($user, $token)
+    && has_capability('local/studyplanner:manageownplan', context_system::instance(), $user);
+if (!$valid) {
+    die('Invalid authentication');
+}
 
 if (empty(get_config('local_studyplanner', 'enabled'))) {
     die('Study planner is disabled');

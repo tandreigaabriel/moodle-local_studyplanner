@@ -23,6 +23,7 @@
  */
 
 use local_studyplanner\form\preferences_form;
+use local_studyplanner\local\ical_token;
 use local_studyplanner\local\plugin_guard;
 use local_studyplanner\local\preferences_manager;
 use local_studyplanner\task\build_user_plan;
@@ -39,6 +40,17 @@ $PAGE->set_url(new moodle_url('/local/studyplanner/preferences.php'));
 $PAGE->set_title(get_string('preferences', 'local_studyplanner'));
 $PAGE->set_heading(get_string('pluginname', 'local_studyplanner'));
 $PAGE->set_pagelayout('standard');
+
+if (optional_param('resetfeed', 0, PARAM_BOOL)) {
+    require_sesskey();
+    ical_token::reset((int) $USER->id);
+    redirect(
+        new moodle_url('/local/studyplanner/preferences.php'),
+        get_string('calendarfeedreset', 'local_studyplanner'),
+        null,
+        \core\output\notification::NOTIFY_SUCCESS
+    );
+}
 
 $form = new preferences_form();
 
@@ -67,7 +79,10 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('preferences', 'local_studyplanner'));
 $form->display();
 
-$feedurl = new moodle_url('/local/studyplanner/calendar.php');
+$feedurl = new moodle_url('/local/studyplanner/calendar.php', [
+    'userid' => $USER->id,
+    'token' => ical_token::get($USER),
+]);
 
 echo $OUTPUT->heading(get_string('calendarfeed', 'local_studyplanner'), 3);
 echo html_writer::tag('p', get_string('calendarfeedintro', 'local_studyplanner'));
@@ -78,5 +93,11 @@ echo html_writer::empty_tag('input', [
     'value' => $feedurl->out(false),
     'onclick' => 'this.select();',
 ]);
+echo html_writer::tag('p', get_string('calendarfeedresetintro', 'local_studyplanner'), ['class' => 'mt-3']);
+echo $OUTPUT->single_button(
+    new moodle_url('/local/studyplanner/preferences.php', ['resetfeed' => 1]),
+    get_string('calendarfeedresetbutton', 'local_studyplanner'),
+    'post'
+);
 
 echo $OUTPUT->footer();
