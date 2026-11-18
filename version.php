@@ -25,7 +25,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_studyplanner';
-$plugin->version = 2026072101;
+$plugin->version = 2026111800;
 $plugin->requires = 2024100701; // Moodle 4.5.
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->release = 'v0.1.0';
+$plugin->maturity = MATURITY_BETA;
+$plugin->supported = [405, 405];
+$plugin->release = 'v1.0.0';

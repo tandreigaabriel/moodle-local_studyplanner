@@ -80,6 +80,9 @@ Site administration → Plugins → Local plugins → Study Planner:
 - `preferences.php` — weekly availability, session length, break length,
   scheduling intensity and reminder settings.
 - `personaltasks.php` — add, edit and delete personal (non-Moodle) tasks.
+- Calendar feed — on the preferences page, a private address to subscribe to
+  the plan in Google Calendar, Outlook or any iCalendar app. "Reset calendar
+  address" stops the old address immediately.
 
 ### Teachers
 
@@ -109,6 +112,15 @@ Developed and maintained by Andrei Toma.
 GNU GPL v3 or later.
 
 ## Changelog
+
+### 1.0.0
+
+- Security: personal tasks can only be opened, edited or deleted by their
+  owner; deleting asks for confirmation.
+- The calendar feed address can be reset, which revokes old links.
+- Sessions for activities a student can no longer see (unenrolled, hidden or
+  deleted) are no longer shown in Today, This week or the calendar feed.
+- Privacy API declares every stored field; PHPUnit tests added.
 
 ### 0.1.0
 
