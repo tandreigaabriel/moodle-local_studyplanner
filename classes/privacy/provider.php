@@ -46,7 +46,8 @@ use core_privacy\local\request\writer;
 class provider implements
     \core_privacy\local\metadata\provider,
     \core_privacy\local\request\core_userlist_provider,
-    \core_privacy\local\request\plugin\provider {
+    \core_privacy\local\request\plugin\provider,
+    \core_privacy\local\request\user_preference_provider {
     /**
      * Tables in this plugin that store personal data, all keyed by userid.
      *
@@ -119,6 +120,11 @@ class provider implements
             'remindertype' => 'privacy:metadata:local_studyplanner_reminders:remindertype',
             'lastsentat' => 'privacy:metadata:local_studyplanner_reminders:lastsentat',
         ], 'privacy:metadata:local_studyplanner_reminders');
+
+        $collection->add_user_preference(
+            \local_studyplanner\local\ical_token::PREFERENCE,
+            'privacy:metadata:preference:icalsecret'
+        );
 
         return $collection;
     }
@@ -292,6 +298,24 @@ class provider implements
 
         foreach (self::PERSONAL_TABLES as $table) {
             $DB->delete_records($table, ['userid' => $userid]);
+        }
+        unset_user_preference(\local_studyplanner\local\ical_token::PREFERENCE, $userid);
+    }
+
+    /**
+     * Exports the user preferences stored by this plugin.
+     *
+     * @param int $userid The user whose preferences are exported.
+     */
+    public static function export_user_preferences(int $userid): void {
+        $secret = get_user_preferences(\local_studyplanner\local\ical_token::PREFERENCE, null, $userid);
+        if ($secret !== null) {
+            writer::export_user_preference(
+                'local_studyplanner',
+                \local_studyplanner\local\ical_token::PREFERENCE,
+                get_string('privacy:redacted', 'local_studyplanner'),
+                get_string('privacy:metadata:preference:icalsecret', 'local_studyplanner')
+            );
         }
     }
 
