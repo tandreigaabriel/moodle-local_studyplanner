@@ -64,6 +64,7 @@ class week_page implements \renderable, \templatable {
             ['userid' => $this->userid, 'start' => $weekstart, 'end' => $weekend, 'cancelled' => 'cancelled'],
             'plannedstart ASC'
         );
+        $items = \local_studyplanner\local\item_visibility::filter($items, (int) $this->userid);
 
         $itemsbyday = [];
         foreach ($items as $item) {
