@@ -72,8 +72,8 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         $this->resetAfterTest();
         $a = $this->getDataGenerator()->create_user();
         $b = $this->getDataGenerator()->create_user();
-        local_studyplanner_test_fill_user($a->id);
-        local_studyplanner_test_fill_user($b->id);
+        $ids = local_studyplanner_test_fill_user($a->id);
+        $otherids = local_studyplanner_test_fill_user($b->id);
         ical_token::get($a);
         $context = \context_user::instance($a->id);
 
@@ -84,6 +84,29 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
 
         provider::export_user_data(new approved_contextlist($a, 'local_studyplanner', [$context->id]));
         $this->assertTrue(writer::with_context($context)->has_any_data());
+        $paths = [
+            'local_studyplanner_preferences' => 'Preferences',
+            'local_studyplanner_availability' => 'Availability',
+            'local_studyplanner_plans' => 'Plans',
+            'local_studyplanner_plan_items' => 'Plan items',
+            'local_studyplanner_personal_tasks' => 'Personal tasks',
+            'local_studyplanner_reschedule_log' => 'Reschedule history',
+            'local_studyplanner_reminders' => 'Reminders',
+        ];
+        foreach ($paths as $table => $name) {
+            $path = ['Study planner', $name];
+            if ($table !== 'local_studyplanner_preferences') {
+                $path[] = (string) $ids[$table];
+            }
+            $actual = (array) writer::with_context($context)->get_data($path);
+            $expected = (array) $DB->get_record($table, ['id' => $ids[$table]], '*', MUST_EXIST);
+            unset($expected['id'], $expected['userid']);
+            $this->assertEquals($expected, $actual, $table);
+            if ($table !== 'local_studyplanner_preferences') {
+                $otherpath = ['Study planner', $name, (string) $otherids[$table]];
+                $this->assertEmpty((array) writer::with_context($context)->get_data($otherpath), $table);
+            }
+        }
         provider::export_user_preferences($a->id);
         $exported = writer::with_context(\context_system::instance())->get_user_preferences('local_studyplanner');
         $secret = get_user_preferences(ical_token::PREFERENCE, null, $a->id);
