@@ -73,7 +73,7 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         $a = $this->getDataGenerator()->create_user();
         $b = $this->getDataGenerator()->create_user();
         $ids = local_studyplanner_test_fill_user($a->id);
-        local_studyplanner_test_fill_user($b->id);
+        $otherids = local_studyplanner_test_fill_user($b->id);
         ical_token::get($a);
         $context = \context_user::instance($a->id);
 
@@ -98,7 +98,14 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
             if ($table !== 'local_studyplanner_preferences') {
                 $path[] = (string) $ids[$table];
             }
-            $this->assertNotEmpty((array) writer::with_context($context)->get_data($path), $table);
+            $actual = (array) writer::with_context($context)->get_data($path);
+            $expected = (array) $DB->get_record($table, ['id' => $ids[$table]], '*', MUST_EXIST);
+            unset($expected['id'], $expected['userid']);
+            $this->assertEquals($expected, $actual, $table);
+            if ($table !== 'local_studyplanner_preferences') {
+                $otherpath = ['Study planner', $name, (string) $otherids[$table]];
+                $this->assertEmpty((array) writer::with_context($context)->get_data($otherpath), $table);
+            }
         }
         provider::export_user_preferences($a->id);
         $exported = writer::with_context(\context_system::instance())->get_user_preferences('local_studyplanner');
