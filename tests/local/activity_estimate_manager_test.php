@@ -20,7 +20,8 @@ namespace local_studyplanner\local;
  * Tests course activity estimates.
  *
  * @package    local_studyplanner
- * @copyright  2026 Andrei Toma
+ * @copyright  2026 TAG Digital Solutions Ltd <https://tandreig.com>
+ * @author     Andrei Toma
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \local_studyplanner\local\activity_estimate_manager
  */

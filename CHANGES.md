@@ -1,5 +1,10 @@
 # Changes
 
+## 1.0.1 (2026-11-25)
+
+- Copyright holder: TAG Digital Solutions Ltd (trading as TAG Web Design & Development); author Andrei Toma. No functional change.
+
+
 ## 1.0.0 (2026-11-18)
 
 - Security: personal tasks can only be opened, edited or deleted by their owner; deleting asks for confirmation.

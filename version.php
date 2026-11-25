@@ -18,15 +18,16 @@
  * Plugin version information.
  *
  * @package    local_studyplanner
- * @copyright  2026 Andrei Toma
+ * @copyright  2026 TAG Digital Solutions Ltd <https://tandreig.com>
+ * @author     Andrei Toma
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_studyplanner';
-$plugin->version = 2026111800;
+$plugin->version = 2026112500;
 $plugin->requires = 2024100701; // Moodle 4.5.
 $plugin->maturity = MATURITY_BETA;
 $plugin->supported = [405, 405];
-$plugin->release = 'v1.0.0';
+$plugin->release = 'v1.0.1';
