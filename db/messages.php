@@ -18,7 +18,8 @@
  * Message provider definitions for local_studyplanner.
  *
  * @package    local_studyplanner
- * @copyright  2026 Andrei Toma
+ * @copyright  2026 TAG Digital Solutions Ltd <https://tandreig.com>
+ * @author     Andrei Toma
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

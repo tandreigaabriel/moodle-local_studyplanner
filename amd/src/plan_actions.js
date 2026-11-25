@@ -17,7 +17,8 @@
  * Handles mark complete / skip / reschedule button clicks on the study planner pages.
  *
  * @module     local_studyplanner/plan_actions
- * @copyright  2026 Andrei Toma
+ * @copyright  2026 TAG Digital Solutions Ltd <https://tandreig.com>
+ * @author     Andrei Toma
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 define(['core/ajax', 'core/notification'], function(Ajax, Notification) {
